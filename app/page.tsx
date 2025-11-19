@@ -1,65 +1,131 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import Editor from "@/components/Editor";
+import Preview from "@/components/Preview";
+import Header from "@/components/Header";
+import FloatingMenu from "@/components/FloatingMenu";
+import ReferenceModal from "@/components/ReferenceModal";
+import { useTheme } from "next-themes";
+import { downloadImage } from "@/utils/export";
+import abcjs from "abcjs";
+
+const DEFAULT_ABC = `X: 1
+T: Cooley's
+M: 4/4
+L: 1/8
+K: Emin
+|:D2|EB{c}BA B2 EB|~B2 AB dBAG|FDAD BDAD|FDAD dAFD|
+EBBA B2 EB|B2 AB defg|afe^c dBAF|DEFD E2:|
+|:gf|eB B2 efge|eB B2 gedB|A2 FA DAFA|A2 FA defg|
+eB B2 eBgB|eB B2 defg|afe^c dBAF|DEFD E2:|`;
 
 export default function Home() {
+  const [abcString, setAbcString] = useState(DEFAULT_ABC);
+  const [fontSize, setFontSize] = useState(16);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [synth, setSynth] = useState<any>(null);
+  const [visualObj, setVisualObj] = useState<any>(null);
+
+  // Initialize synth
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const synthInstance = new abcjs.synth.CreateSynth();
+      setSynth(synthInstance);
+    }
+  }, []);
+
+  const handlePlay = async () => {
+    if (!synth || !visualObj) return;
+
+    if (isPlaying) {
+      synth.stop();
+      setIsPlaying(false);
+      return;
+    }
+
+    try {
+      await synth.init({ visualObj: visualObj });
+      await synth.prime();
+      await synth.start();
+      setIsPlaying(true);
+      // 終了検知は難しいが、とりあえず再生開始はできる
+      // abcjsのsynthは終了イベントを持ってるか？
+      // synth.start() returns a promise that resolves when started.
+      // There isn't a simple "onEnded" callback in the basic usage, but we can check documentation.
+      // For now, simple toggle.
+    } catch (error) {
+      console.error("Playback failed:", error);
+      setIsPlaying(false);
+    }
+  };
+
+  const handleShare = () => {
+    navigator.clipboard.writeText(abcString);
+    alert("ABC記法のテキストをコピーしました！");
+  };
+
+  const handleDownloadPng = () => {
+    downloadImage("paper", "music-score");
+  };
+
+  const handleFontSizeChange = (delta: number) => {
+    setFontSize((prev) => Math.max(12, Math.min(32, prev + delta)));
+  };
+
+  // URLパラメータからの読み込み
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const abcParam = params.get("abc");
+    if (abcParam) {
+      setAbcString(decodeURIComponent(abcParam));
+    }
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex h-screen flex-col bg-[var(--app-bg)] transition-colors duration-300">
+      <Header
+        onPlay={handlePlay}
+        onShare={handleShare}
+        onDownloadPng={handleDownloadPng}
+        onToggleTheme={() => setTheme(theme === "dark" ? "light" : "dark")}
+        onOpenGuide={() => setIsGuideOpen(true)}
+        onFontSizeChange={handleFontSizeChange}
+        isPlaying={isPlaying}
+      />
+
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden p-4 gap-4 pb-24 md:py-12 md:px-16 lg:px-32 md:gap-12">
+        {/* Editor Area */}
+        <div className="flex-1 bg-[var(--surface-bg)] rounded-2xl shadow-sm border border-[var(--outline)]/20 overflow-hidden flex flex-col transition-colors duration-300">
+          <Editor
+            value={abcString}
+            onChange={setAbcString}
+            fontSize={fontSize}
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Preview Area */}
+        <div className="flex-1 bg-[var(--surface-bg)] rounded-2xl shadow-sm border border-[var(--outline)]/20 overflow-hidden flex flex-col transition-colors duration-300">
+          <Preview abcString={abcString} onRender={setVisualObj} />
         </div>
-      </main>
-    </div>
+      </div>
+
+      <FloatingMenu
+        onPlay={handlePlay}
+        onShare={handleShare}
+        onDownloadPng={handleDownloadPng}
+        onToggleTheme={() => setTheme(theme === "dark" ? "light" : "dark")}
+        onOpenGuide={() => setIsGuideOpen(true)}
+        onFontSizeChange={handleFontSizeChange}
+        isPlaying={isPlaying}
+      />
+
+      <ReferenceModal
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+      />
+    </main>
   );
 }
