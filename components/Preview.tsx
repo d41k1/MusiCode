@@ -34,12 +34,12 @@ const Preview: React.FC<PreviewProps> = ({
   }, [abcString, id, onRender]);
 
   return (
-    <div className="w-full h-full overflow-hidden bg-[var(--content-bg)] text-[var(--text-primary)] rounded-lg shadow-inner p-8 flex justify-center items-center transition-colors duration-200">
+    <div className="w-full h-full overflow-hidden bg-(--content-bg) text-(--text-primary) rounded-lg shadow-inner p-8 flex justify-center items-center transition-colors duration-200">
       <div className="w-full h-full overflow-auto flex justify-center items-start">
         <div
           id={id}
           ref={containerRef}
-          className="w-full max-w-full text-[var(--text-primary)] origin-top"
+          className="w-full max-w-full text-(--text-primary) origin-top"
         />
       </div>
     </div>

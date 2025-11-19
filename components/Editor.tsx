@@ -8,9 +8,9 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ value, onChange, fontSize = 16 }) => {
   return (
-    <div className="h-full w-full flex flex-col bg-[var(--content-bg)]">
+    <div className="h-full w-full flex flex-col bg-(--content-bg)">
       <textarea
-        className="flex-1 w-full h-full p-8 font-mono bg-transparent text-[var(--text-primary)] focus:outline-none resize-none leading-relaxed placeholder-[var(--text-primary)]/50"
+        className="flex-1 w-full h-full p-8 font-mono bg-transparent text-(--text-primary) focus:outline-none resize-none leading-relaxed placeholder-(--text-primary)/50"
         style={{ fontSize: `${fontSize}px` }}
         value={value}
         onChange={(e) => onChange(e.target.value)}

@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({
   }, []);
 
   return (
-    <header className="h-16 bg-[var(--header-bg)] border-b border-[var(--outline)]/20 flex items-center justify-between px-4 shadow-sm z-10 transition-colors duration-300">
+    <header className="h-16 bg-(--header-bg) border-b border-(--outline)/20 flex items-center justify-between px-4 shadow-sm z-10 transition-colors duration-300">
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 flex items-center justify-center">
           <img
@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({
             className="w-full h-full object-contain"
           />
         </div>
-        <h1 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
+        <h1 className="text-xl font-bold tracking-tight text-(--text-primary)">
           MusiCode
         </h1>
       </div>
@@ -45,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className="hidden md:flex items-center gap-3">
         <button
           onClick={onPlay}
-          className="h-10 flex items-center justify-center gap-2 px-4 bg-[var(--primary)] text-[var(--on-primary)] rounded-full hover:bg-[var(--primary)]/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
+          className="h-10 flex items-center justify-center gap-2 px-4 bg-(--primary) text-(--on-primary) rounded-full hover:bg-(--primary)/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
         >
           <span className="material-symbols-rounded text-[20px]">
             {isPlaying ? "stop" : "play_arrow"}
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onShare}
-          className="h-10 flex items-center justify-center gap-2 px-4 bg-[var(--primary)] text-[var(--on-primary)] rounded-full hover:bg-[var(--primary)]/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
+          className="h-10 flex items-center justify-center gap-2 px-4 bg-(--primary) text-(--on-primary) rounded-full hover:bg-(--primary)/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
         >
           <span className="material-symbols-rounded text-[20px]">share</span>
           <span>Share</span>
@@ -63,13 +63,13 @@ const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onDownloadPng}
-          className="h-10 flex items-center justify-center gap-2 px-4 bg-[var(--primary)] text-[var(--on-primary)] rounded-full hover:bg-[var(--primary)]/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
+          className="h-10 flex items-center justify-center gap-2 px-4 bg-(--primary) text-(--on-primary) rounded-full hover:bg-(--primary)/90 transition-all shadow-sm hover:shadow active:scale-95 font-medium cursor-pointer"
         >
           <span className="material-symbols-rounded text-[20px]">download</span>
           <span>PNG</span>
         </button>
 
-        <div className="h-10 flex items-center bg-[var(--primary)] text-[var(--on-primary)] rounded-full p-1 shadow-sm">
+        <div className="h-10 flex items-center bg-(--primary) text-(--on-primary) rounded-full p-1 shadow-sm">
           <button
             onClick={() => onFontSizeChange(-2)}
             className="w-8 h-full flex items-center justify-center hover:bg-black/10 rounded-full transition-colors cursor-pointer"
@@ -91,7 +91,7 @@ const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onToggleTheme}
-          className="h-10 w-10 flex items-center justify-center bg-[var(--primary)] text-[var(--on-primary)] rounded-full hover:bg-[var(--primary)]/90 transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
+          className="h-10 w-10 flex items-center justify-center bg-(--primary) text-(--on-primary) rounded-full hover:bg-(--primary)/90 transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
         >
           <span className="material-symbols-rounded text-[20px]">
             {mounted && theme === "dark" ? "light_mode" : "dark_mode"}
@@ -100,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({
 
         <button
           onClick={onOpenGuide}
-          className="h-10 w-10 flex items-center justify-center bg-[var(--primary)] text-[var(--on-primary)] rounded-full hover:bg-[var(--primary)]/90 transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
+          className="h-10 w-10 flex items-center justify-center bg-(--primary) text-(--on-primary) rounded-full hover:bg-(--primary)/90 transition-all shadow-sm hover:shadow active:scale-95 cursor-pointer"
         >
           <span className="material-symbols-rounded text-[20px]">help</span>
         </button>
