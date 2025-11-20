@@ -1,4 +1,4 @@
-# <img src="app/icon.svg" alt="Music Markdown" width="30"> Music Markdown
+# <img src="app/icon.svg" alt="MusiCode" width="30"> MusiCode
 
 <div>
   <p><strong>A editor app for writing musical notation using a markdown style syntax, including ABC notation.</strong></p>
